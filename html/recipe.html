@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Recipe Generator</title>
+    <link rel="stylesheet" href="/css/recipe.css">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>AI Recipe Generator 🍽️</h1>
+            <button id="theme-toggle">🌙 Light Mode</button> <!-- Dark/Light Mode Toggle -->
+        </header>
+        
+        <section class="input-section">
+            <label for="ingredients">Enter Ingredients:</label> <br> <!-- Line break added -->
+            <input type="text" id="ingredients" placeholder="e.g., paneer, onions, spices">
+            <button onclick="generateRecipe()">Generate Recipe</button>
+        </section>
+
+        <!-- Loading text (not animated) -->
+        <div id="loading" class="hidden">⏳ Generating...</div>
+
+        <section class="output-section">
+            <div id="output"></div> 
+        </section>
+    </div>
+
+    <script src="/JavaScript/recipe.js"></script>
+</body>
+</html>

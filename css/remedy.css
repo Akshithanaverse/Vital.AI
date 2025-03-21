@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+    --bg-light: #f5f5f5;
+    --bg-dark: #2b2b2b;
+    --text-light: #2b2b2b;
+    --text-dark: #ffffff;
+    --primary-color: #ff8c42;
+    --accent-color: #ff3e6c;
+    --input-bg-light: #ffffff;
+    --input-bg-dark: #3a3a3a;
+    --card-light: #ffffff;
+    --card-dark: #3a3a3a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 30px;
+    padding-left: 110px;
+    transition: background 0.3s ease, color 0.3s ease;
+    width: 100%;
+}
+
+.container {
+    width: 100%;
+    text-align: center;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+#theme-toggle {
+    padding: 8px 15px;
+    font-size: 1rem;
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+#theme-toggle:hover {
+    background: var(--accent-color);
+}
+
+/* Updated Input & Output Sections */
+.input-section, .output-section {
+    width: 95%;
+    max-width: 1300px; /* Expanded width */
+    padding: 15px; /* Less padding */
+    background: var(--card-light);
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    transition: background 0.3s ease;
+    margin-bottom: 20px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--primary-color);
+    border-radius: 6px;
+    outline: none;
+    font-size: 1rem;
+    background: var(--input-bg-light);
+    color: var(--text-light);
+}
+
+button {
+    margin-top: 12px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    background: var(--primary-color);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+button:hover {
+    background: var(--accent-color);
+}
+
+#output {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Loader Styling */
+#loading {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 10px;
+    display: none;
+}
+
+/* Dark Mode */
+.dark-mode {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+.dark-mode .input-section,
+.dark-mode .output-section {
+    background: var(--card-dark);
+}
+
+.dark-mode input {
+    background: var(--input-bg-dark);
+    color: var(--text-dark);
+}
+.remedy-heading {
+    font-size: 1.2em; /* Slightly larger font size */
+    font-weight: bold; /* Make it bold */
+    margin-top: 10px;
+}
+
+.remedy-title {
+    font-size: 1.5em;
+    font-weight: bold;
+}

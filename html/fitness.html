@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Hub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+            transition: background 0.3s;
+        }
+        header {
+            background: #333;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .section {
+            padding: 50px;
+            background: white;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .button {
+            padding: 10px 20px;
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Fitness Hub</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#strength">Strength Training</a></li>
+                <li><a href="#cardio">Cardio</a></li>
+                <li><a href="#flexibility">Flexibility</a></li>
+                <li><a href="#yoga">Yoga</a></li>
+                <li><a href="#hiit">HIIT</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <section id="home" class="section">
+        <h2>Welcome to Fitness Hub</h2>
+        <p>Your ultimate guide to staying fit and healthy.</p>
+    </section>
+    
+    <section id="strength" class="section">
+        <h2>Strength Training</h2>
+        <p>Build muscle and increase strength with weightlifting and resistance exercises.</p>
+        <button class="button" onclick="alert('Strength training involves resistance exercises like weightlifting!')">Learn More</button>
+    </section>
+    
+    <section id="cardio" class="section">
+        <h2>Cardio Workouts</h2>
+        <p>Improve heart health and endurance with running, cycling, and more.</p>
+        <button class="button" onclick="alert('Cardio exercises keep your heart healthy and boost endurance!')">Learn More</button>
+    </section>
+    
+    <section id="flexibility" class="section">
+        <h2>Flexibility & Mobility</h2>
+        <p>Enhance movement and prevent injuries with stretching and yoga.</p>
+        <button class="button" onclick="alert('Flexibility exercises improve range of motion and prevent injuries!')">Learn More</button>
+    </section>
+    
+    <section id="yoga" class="section">
+        <h2>Yoga</h2>
+        <p>Improve flexibility, reduce stress, and enhance overall well-being through yoga practices.</p>
+        <button class="button" onclick="alert('Yoga combines physical postures and breathing techniques for overall well-being!')">Learn More</button>
+    </section>
+    
+    <section id="hiit" class="section">
+        <h2>High-Intensity Interval Training (HIIT)</h2>
+        <p>Burn fat and improve conditioning with short, intense workout bursts.</p>
+        <button class="button" onclick="alert('HIIT involves short bursts of intense exercises for maximum results!')">Learn More</button>
+    </section>
+    
+    <section id="contact" class="section">
+        <h2>Contact Us</h2>
+        <p>Reach out for personalized fitness guidance.</p>
+    </section>
+    
+    <script>
+        document.querySelectorAll('nav ul li a').forEach(anchor => {
+            anchor.addEventListener('click', function(event) {
+                event.preventDefault();
+                const sectionId = this.getAttribute('href').substring(1);
+                document.getElementById(sectionId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        function revealSections() {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.75) {
+                    section.classList.add('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', revealSections);
+        revealSections();
+    </script>
+</body>
+</html>

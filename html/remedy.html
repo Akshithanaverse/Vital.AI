@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Home Remedies Generator</title>
+    <link rel="stylesheet" href="/css/remedy.css">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>AI Home Remedies Generator 🌿</h1>
+            <button id="theme-toggle">🌙 Light Mode</button> <!-- Dark/Light Mode Toggle -->
+        </header>
+        
+        <section class="input-section">
+            <label for="disease">Enter Disease or Symptom:</label> <br> <!-- Line break added -->
+            <input type="text" id="disease" placeholder="e.g., common cold, headache, sore throat">
+            <button onclick="getRemedies()">Generate Remedies</button>
+        </section>
+
+        <!-- Loading text -->
+        <div id="loading" class="hidden">⏳ Generating...</div>
+
+        <section class="output-section">
+            <div id="output"></div> 
+        </section>
+    </div>
+
+    <script src="/JavaScript/remedy.js"></script>
+</body>
+</html>

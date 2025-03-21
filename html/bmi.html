@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: url('https://www.transparenttextures.com/patterns/clean-gray-paper.png');
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 6rem; /* Kept original padding */
+        }
+
+        .main-container {
+            display: flex;
+            width: 100%;
+            max-width: 1200px; /* Limit max width for larger screens */
+            height: calc(100vh - 2rem); /* Full height minus top/bottom padding */
+            gap: 0.5rem; /* Minimal gap between boxes */
+        }
+
+        .left-box {
+            background: white;
+            padding: 1rem 1rem 1rem 2rem; /* Reduced right padding */
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem; /* Reduced gap between inputs */
+            height: 80%; /* Full height of container */
+            overflow-y: auto; /* Scroll if content overflows, but should fit */
+        }
+
+        .right-box {
+            background: white;
+            padding: 2rem 1rem 1rem 1rem; /* Adjusted top padding to 2rem */
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 50%;
+            text-align: center;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            justify-content: flex-start; /* Align content to the top */
+            height: 80%; /* Full height of container */
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 0.75rem; /* Reduced margin */
+            font-size: 1.5rem; /* Smaller font size */
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 0.5rem; /* Reduced margin */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.25rem; /* Reduced margin */
+            color: #555;
+            font-weight: bold;
+            font-size: 0.9rem; /* Smaller font */
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.5rem; /* Reduced padding */
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem; /* Smaller font */
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #6e8efb;
+        }
+
+        .height-feet {
+            display: none;
+            gap: 0.25rem; /* Reduced gap */
+        }
+
+        .height-feet input {
+            width: 48%;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.5rem; /* Reduced padding */
+            background: #6e8efb;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem; /* Smaller font */
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #a777e3;
+        }
+
+        .result {
+            margin-top: 0; /* No additional top margin */
+            font-size: 1.5rem; /* Increased font size from 1rem to 1.25rem */
+            color: #333;
+            font-weight: bold;
+            min-height: 1.5rem; /* Reduced height */
+        }
+
+        .result-img {
+            height: 450px;
+            width: 450px;
+            padding-left: 110px;
+            padding-top: 20px;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="left-box">
+            <h1>BMI Calculator</h1>
+            <div class="input-group">
+                <label for="unit-system">Unit System:</label>
+                <select id="unit-system" onchange="updateUnits()">
+                    <option value="metric">Metric (kg, cm)</option>
+                    <option value="imperial">Imperial (lb, ft/in)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="age">Age:</label>
+                <input type="number" id="age" placeholder="Enter your age" min="0">
+            </div>
+            <div class="input-group">
+                <label for="gender">Gender:</label>
+                <select id="gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="input-group" id="height-cm-group">
+                <label for="height-cm">Height (cm):</label>
+                <input type="number" id="height-cm" placeholder="Enter height in cm" min="0">
+            </div>
+            <div class="input-group height-feet" id="height-feet-group">
+                <label>Height (ft/in):</label>
+                <input type="number" id="height-ft" placeholder="Feet" min="0">
+                <input type="number" id="height-in" placeholder="Inches" min="0" max="11">
+            </div>
+            <div class="input-group">
+                <label for="weight">Weight (<span id="weight-unit">kg</span>):</label>
+                <input type="number" id="weight" placeholder="Enter weight in kg" min="0">
+            </div>
+            <button onclick="calculateBMI()">Calculate</button>
+        </div>
+        <div class="right-box" id="right-box">
+            <div id="result" class="result"></div>
+            <img id="result-img" class="result-img" alt="BMI Result" style="display: none;">
+        </div>
+    </div>
+
+    <script>
+        function updateUnits() {
+            const unitSystem = document.getElementById('unit-system').value;
+            const weightUnit = document.getElementById('weight-unit');
+            const heightCmGroup = document.getElementById('height-cm-group');
+            const heightFeetGroup = document.getElementById('height-feet-group');
+            const weightInput = document.getElementById('weight');
+
+            if (unitSystem === 'metric') {
+                weightUnit.textContent = 'kg';
+                heightCmGroup.style.display = 'block';
+                heightFeetGroup.style.display = 'none';
+                weightInput.placeholder = 'Enter weight in kg';
+            } else {
+                weightUnit.textContent = 'lb';
+                heightCmGroup.style.display = 'none';
+                heightFeetGroup.style.display = 'flex';
+                weightInput.placeholder = 'Enter weight in lb';
+            }
+        }
+
+        function calculateBMI() {
+            const unitSystem = document.getElementById('unit-system').value;
+            const age = parseFloat(document.getElementById('age').value);
+            const gender = document.getElementById('gender').value;
+            const weight = parseFloat(document.getElementById('weight').value);
+            let height;
+            const resultDiv = document.getElementById('result');
+            const resultImg = document.getElementById('result-img');
+            const rightBox = document.getElementById('right-box');
+
+            // Clear previous result and hide right box
+            resultDiv.innerHTML = '';
+            resultImg.style.display = 'none';
+            rightBox.style.display = 'none';
+
+            // Validation for age
+            if (isNaN(age) || age <= 0) {
+                resultDiv.innerHTML = 'Please enter a valid age!';
+                resultDiv.style.color = '#e74c3c';
+                rightBox.style.display = 'flex'; // Show box for error
+                return;
+            }
+
+            // Get height based on unit system
+            if (unitSystem === 'metric') {
+                height = parseFloat(document.getElementById('height-cm').value) / 100; // cm to meters
+                if (isNaN(height) || height <= 0) {
+                    resultDiv.innerHTML = 'Please enter a valid height!';
+                    resultDiv.style.color = '#e74c3c';
+                    rightBox.style.display = 'flex'; // Show box for error
+                    return;
+                }
+            } else {
+                const feet = parseFloat(document.getElementById('height-ft').value);
+                const inches = parseFloat(document.getElementById('height-in').value);
+                if (isNaN(feet) || feet < 0 || isNaN(inches) || inches < 0 || inches >= 12) {
+                    resultDiv.innerHTML = 'Please enter a valid height!';
+                    resultDiv.style.color = '#e74c3c';
+                    rightBox.style.display = 'flex'; // Show box for error
+                    return;
+                }
+                height = ((feet * 12) + inches) * 0.0254; // Convert feet+inches to meters
+            }
+
+            // Convert weight if in pounds
+            const weightInKg = unitSystem === 'metric' ? weight : weight * 0.453592;
+            if (isNaN(weightInKg) || weightInKg <= 0) {
+                resultDiv.innerHTML = 'Please enter a valid weight!';
+                resultDiv.style.color = '#e74c3c';
+                rightBox.style.display = 'flex'; // Show box for error
+                return;
+            }
+
+            // Calculate BMI
+            const bmi = (weightInKg / (height * height)).toFixed(1);
+
+            // Determine category and set corresponding image
+            let category = '';
+            let imageUrl = '';
+            if (bmi < 18.5) {
+                category = 'Underweight';
+                resultDiv.style.color = '#3498db';
+                imageUrl = '/assets/underweight.png'; // Replace with your Underweight image URL
+            } else if (bmi < 25) {
+                category = 'Normal';
+                resultDiv.style.color = '#2ecc71';
+                imageUrl = '/assets/normal.png'; // Replace with your Normal image URL
+            } else if (bmi < 30) {
+                category = 'Overweight';
+                resultDiv.style.color = '#f1c40f';
+                imageUrl = '/assets/overweight.png'; // Replace with your Overweight image URL
+            } else {
+                category = 'Obese';
+                resultDiv.style.color = '#e74c3c';
+                imageUrl = '/assets/obese.png'; // Replace with your Obese image URL
+            }
+
+            // Display result and show right box with specific image
+            resultDiv.innerHTML = `Your BMI: ${bmi} (${category})`;
+            resultImg.src = imageUrl;
+            resultImg.style.display = 'block';
+            rightBox.style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
