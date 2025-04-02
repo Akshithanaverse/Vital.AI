@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strength Training</title>
+    <style>
+        :root {
+    --bg-light: #F4F1DE;
+    --bg-dark: #3D405B;
+    --text-light: #3D405B;
+    --text-dark: #F4F1DE;
+    --primary-color: linear-gradient(135deg, #E07A5F, #F2CC8F);
+    --secondary-color: #81B29A;
+    --accent-color: #E07A5F;
+}
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-light);
+            text-align: center;
+        }
+        header {
+            background: var(--secondary-color);
+            color: white;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .exercise {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-light);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        .exercise img {
+            width: 180px;
+            height: 180px;
+            border-radius: 5px;
+        }
+        .timer {
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            background: #28a745;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #218838;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <header>Yoga</header>
+    <div class="container">
+        <h2>Common Yoga Workouts</h2>
+        <div class="exercise" id="jump_rope">
+            <img src="https://media.giphy.com/media/MaOiHFdoWaJexgoIew/giphy.gif?cid=790b7611qu2mk9iivy9ffg4yzg3wrcsexabo46nt96ftkex7&ep=v1_gifs_search&rid=giphy.gif&ct=g" alt="Push-Ups Animation">
+            <div>
+                <strong>Downward Dog:</strong> A foundational yoga pose that strengthens the entire body, stretches the hamstrings, and improves posture.
+                <div class="timer">
+                    <input type="time" id="pushupTimer" step="1">
+                    <button onclick="startTimer('pushupTimer', 'pushupCountdown')">Start</button>
+                    <button onclick="resetTimer('pushupCountdown')">Reset</button>
+                    <h2 id="pushupCountdown">00:00:00</h2>
+                </div>
+            </div>
+        </div>
+        <div class="exercise" id="running">
+            <img src="https://media.giphy.com/media/XonFG3VTTDzMHCrNTZ/giphy.gif?cid=790b7611gtve9nnrudurjppccqz4tx84pwnpsu52o713q71q&ep=v1_gifs_search&rid=giphy.gif&ct=g" alt="Squats Animation">
+            <div>
+                <strong>Tree Pose:</strong> A balancing pose that strengthens the legs, improves focus, and promotes mental clarity.
+                <div class="timer">
+                    <input type="time" id="squatTimer" step="1">
+                    <button onclick="startTimer('squatTimer', 'squatCountdown')">Start</button>
+                    <button onclick="resetTimer('squatCountdown')">Reset</button>
+                    <h2 id="squatCountdown">00:00:00</h2>
+                </div>
+            </div>
+        </div>
+        <div class="exercise" id="plank">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaWJ1MWVmODVsNXkzb2o3b2YzYWZrbTc2cXFnbjR4Ym4xemxva3NoYiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/dBkPUeF1MFgEU/giphy.gif" alt="Plank Animation">
+            <div>
+                <strong>Cat-Cow Pose:</strong>A flowing movement between arching and rounding the back that improves spinal flexibility and relieves tension.
+                <div class="timer">
+                    <input type="time" id="plankTimer" step="1">
+                    <button onclick="startTimer('plankTimer', 'plankCountdown')">Start</button>
+                    <button onclick="resetTimer('plankCountdown')">Reset</button>
+                    <h2 id="plankCountdown">00:00:00</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function startTimer(timerId, countdownId) {
+            let timeInput = document.getElementById(timerId).value;
+            let [hours, minutes, seconds] = timeInput.split(':').map(Number);
+            let totalTime = hours * 3600 + minutes * 60 + seconds;
+            
+            if (totalTime <= 0) return;
+            
+            document.querySelector(`button[onclick="startTimer('${timerId}', '${countdownId}')"]`).disabled = true;
+            
+            let timer = setInterval(() => {
+                if (totalTime <= 0) {
+                    clearInterval(timer);
+                    document.querySelector(`button[onclick="startTimer('${timerId}', '${countdownId}')"]`).disabled = false;
+                    alert("Time's up!");
+                    return;
+                }
+                totalTime--;
+                let displayHours = Math.floor(totalTime / 3600);
+                let displayMinutes = Math.floor((totalTime % 3600) / 60);
+                let displaySeconds = totalTime % 60;
+                document.getElementById(countdownId).textContent = `${displayHours.toString().padStart(2, '0')}:${displayMinutes.toString().padStart(2, '0')}:${displaySeconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+        
+        function resetTimer(countdownId) {
+            document.getElementById(countdownId).textContent = "00:00:00";
+        }
+    </script>
+</body>
+</html>

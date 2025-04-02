@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Recipe Generator</title>
+    <link rel="stylesheet" href="../css/remedy.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">Vital.AI</div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="services.html">Services</a></li>
+            </ul>
+        </nav>
+        <button id="theme-toggle">🌙</button>
+    </header>
+
+    <div class="container">
+        <header>
+            <h1>AI Home Remedies Generator 🏥</h1>
+            
+        </header>
+        
+        <section class="input-section">
+            <label for="ingredients">Enter disease or symptom:</label>
+            <input type="text" id="ingredients" placeholder="e.g., common cold, sore throat">
+            <br>
+            <br>
+            <button onclick="getRemedies()"><p>Generate Remedie</p></button>
+        </section>
+
+        <div id="loading" class="hidden">⏳ Generating...</div>
+
+        <section class="output-section">
+            <div id="output"></div> 
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2025 AI Health Tracker. All Rights Reserved.</p>
+    </footer>
+
+    <script src="../JavaScript/remedy.js"></script>
+</body>
+</html>

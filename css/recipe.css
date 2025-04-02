@@ -1,0 +1,195 @@
+:root {
+    --bg-light: #F4F1DE;
+    --bg-dark: #3D405B;
+    --text-light: #3D405B;
+    --text-dark: #F4F1DE;
+    --primary-color: linear-gradient(135deg, #E07A5F, #F2CC8F);
+    --secondary-color: #81B29A;
+    --accent-color: #E07A5F;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-light);
+    color: var(--text-light);
+    margin: 0;
+    padding: 0;
+    transition: background 0.3s, color 0.3s;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.dark-mode {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* Navbar Styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    height: 2.8rem;
+    background: var(--secondary-color);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: var(--text-light);
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.dark-mode nav ul li a {
+    color: var(--text-dark);
+}
+
+nav ul li a:hover {
+    color: var(--accent-color);
+}
+
+#theme-toggle {
+    cursor: pointer;
+    font-size: 1.2rem;
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+}
+
+.dark-mode #theme-toggle {
+    color: var(--text-dark);
+}
+
+/* Recipe Generator Sections */
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    flex: 1;
+}
+
+.input-section label {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.input-section input {
+    width: 80%;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-light);
+    background: var(--bg-light);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    outline: none;
+}
+
+/* Input Field Hover Effect */
+.input-section input:hover {
+    border-color: var(--accent-color);
+}
+
+/* Input Field Focus Effect */
+.input-section input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0px 0px 10px rgba(224, 122, 95, 0.5);
+    background: #fff;
+}
+
+
+.input-section button {
+    background: var(--accent-color);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;  /* Increased font weight */
+    border: none;
+    height: 50px;
+    width: 200px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+    border-radius: 8px; /* Slight rounding for a modern look */
+}
+
+.input-section button:hover {
+    background: #D55C4B; /* Darker shade of accent color */
+    transform: scale(1.1); /* Enlarges button slightly */
+}
+.dark-mode .container {
+    background: #4A2F4D; /* Dark background for dark mode */
+    color: var(--text-dark); /* Light text color for visibility */
+    box-shadow: 0px 4px 6px rgba(255, 255, 255, 0.1); /* Subtle white shadow */
+}
+
+.dark-mode .input-section input {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+    border-color: var(--text-dark);
+}
+
+.dark-mode .input-section input::placeholder {
+    color: rgba(244, 241, 222, 0.7); /* Lightened placeholder text */
+}
+
+.dark-mode .input-section button {
+    background: var(--accent-color);
+    color: white;
+}
+
+.dark-mode #output {
+    color: var(--text-dark);
+}
+
+
+/* Loading & Output */
+#loading {
+    font-size: 1.2rem;
+    color: var(--accent-color);
+    margin-top: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+.output-section {
+    margin-top: 20px;
+}
+
+#output {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--text-light);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 1rem;
+    background: var(--secondary-color);
+    color: var(--text-dark);
+}

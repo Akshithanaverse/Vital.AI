@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* Reset some default browser styling */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Flexbox layout to make content take up space and footer stay at the bottom */
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* Container to center the content */
+        .content {
+            flex: 1; /* This makes the content take up available space */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Aligns the content at the top */
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* About Us Section Styling */
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Paragraph styling with indentation and spacing */
+        p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 20px 0; /* Space between paragraphs */
+            line-height: 1.6;
+            color: #555;
+            text-align: justify; /* Justify text for a more professional look */
+            text-indent: 30px; /* Indentation for the first line of each paragraph */
+        }
+
+        /* Footer Styling */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 1rem;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #333;
+            color: white;
+        }
+
+        .navbar nav ul {
+            list-style-type: none;
+            display: flex;
+        }
+
+        .navbar nav ul li {
+            margin-left: 20px;
+        }
+
+        .navbar nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .navbar .logo {
+            font-size: 2rem;
+        }
+
+        #theme-toggle {
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header class="navbar">
+            <div class="logo">Vital.AI</div>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="#Aboutus">About Us</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                </ul>
+            </nav>
+            <button id="theme-toggle">🌙</button>
+        </header>
+
+        <!-- About Us Section -->
+        <div class="content">
+            <section id="Aboutus">
+                <h1>About Us</h1>
+                <p>Welcome to Vital.AI, where we combine cutting-edge technology with a passion for health and wellness to create a personalized experience for every individual. In today's fast-paced world, maintaining a healthy lifestyle can be challenging. That's why we created a platform that leverages advanced artificial intelligence and machine learning algorithms to offer users tailored health insights and recommendations. Our goal is to simplify the process of achieving and maintaining your health goals, whether it's losing weight, managing stress, or improving overall fitness.</p>
+
+                <p>At Vital.AI, we believe that every person’s health journey is unique. That’s why we take a personalized approach to wellness, understanding that your lifestyle, genetic makeup, and preferences play an essential role in your well-being. We strive to empower our users with the tools and resources they need to make informed decisions about their diet, exercise, and mental health. Whether you're a busy professional, a stay-at-home parent, or someone seeking a healthier lifestyle, Vital.AI offers customizable solutions to suit your individual needs.</p>
+
+                <p>We are not just about fitness and nutrition — we are committed to creating a balanced approach to health. Mental well-being, emotional health, and stress management are integral parts of the holistic health journey we promote. Vital.AI helps you track your nutrition, physical activity, and mental health, providing insights that will guide you toward healthier habits. With our state-of-the-art tools and educational resources, we aim to inspire you to take control of your health, offering support at every step. Our mission is simple: to help you live a longer, healthier, and more fulfilled life.</p>
+
+                <p>Our platform offers a variety of features designed to enhance your health journey. From personalized meal plans and fitness routines to stress-reducing techniques and sleep optimization, Vital.AI is your one-stop solution for achieving wellness. We are continuously innovating and refining our services, ensuring that you receive the most up-to-date and effective tools for your health. Join our growing community of individuals who are taking charge of their health with the power of AI. Together, we can create a healthier world, one step at a time.</p>
+
+                <p>At the core of Vital.AI, we value transparency, integrity, and the desire to see you succeed. Our AI-driven platform is built on data science and research, and we are committed to ensuring the privacy and security of your information. We believe that technology can transform lives, and we are here to guide you on your wellness journey every day. Thank you for trusting us with your health – let’s take this journey together!</p>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>© 2025 Vital.AI. All Rights Reserved.</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2025/03/19/10/20250319100617-5C202XAI.js"></script>
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive India Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        body { display: flex; height: 100vh; margin: 0; font-family: Arial, sans-serif; }
+        #sidebar {
+            width: 30%; 
+            padding: 20px; 
+            background: #f4f1de; 
+            color:#000;
+            overflow-y: auto; 
+            display: flex;
+            flex-direction: column;
+        }
+        #sidebar h2 { text-align: center; margin-bottom: 20px; }
+        #search-input { 
+            padding: 10px; 
+            border: none; 
+            border-radius: 5px; 
+            margin-bottom: 10px; 
+        }
+        #search-btn { 
+            padding: 10px; 
+            background: #3498db; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+        }
+        #search-btn:hover { background: #2980b9; }
+        #info { 
+            background: #ede7d7; 
+            padding: 15px; 
+            border-radius: 5px;
+            margin-top: 10px; 
+            flex-grow: 1;
+        }
+        #map { width: 70%; height: 100vh; }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h2>Vital.AI<br>India Food & Health Trends</h2>
+        <input type="text" id="search-input" placeholder="Enter place in India">
+        <button id="search-btn">Search</button>
+        <div id="info">Search for a place to see details here.</div>
+    </div>
+    <div id="map"></div>
+    <script>
+        var map = L.map('map').setView([20.5937, 78.9629], 5);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        var cityData = {
+    "Delhi": { "lat": 28.7041, "lon": 77.1025, "food": "Chole Bhature", "aqi": "Unhealthy", "disease": "Respiratory Issues" },
+    "Mumbai": { "lat": 19.0760, "lon": 72.8777, "food": "Vada Pav", "aqi": "Moderate", "disease": "Asthma" },
+    "Kolkata": { "lat": 22.5726, "lon": 88.3639, "food": "Rosogolla", "aqi": "Poor", "disease": "Diabetes" },
+    "Chennai": { "lat": 13.0827, "lon": 80.2707, "food": "Idli Sambar", "aqi": "Moderate", "disease": "Hypertension" },
+    "Bangalore": { "lat": 12.9716, "lon": 77.5946, "food": "Masala Dosa", "aqi": "Moderate", "disease": "Allergies" },
+    "Hyderabad": { "lat": 17.3850, "lon": 78.4867, "food": "Hyderabadi Biryani", "aqi": "Poor", "disease": "Obesity" },
+    "Ahmedabad": { "lat": 23.0225, "lon": 72.5714, "food": "Dhokla", "aqi": "Poor", "disease": "Heart Diseases" },
+    "Pune": { "lat": 18.5204, "lon": 73.8567, "food": "Misal Pav", "aqi": "Moderate", "disease": "Allergies" },
+    "Jaipur": { "lat": 26.9124, "lon": 75.7873, "food": "Dal Baati Churma", "aqi": "Poor", "disease": "Respiratory Issues" },
+    "Lucknow": { "lat": 26.8467, "lon": 80.9462, "food": "Tunday Kababi", "aqi": "Poor", "disease": "Hypertension" },
+    "Patna": { "lat": 25.5941, "lon": 85.1376, "food": "Litti Chokha", "aqi": "Poor", "disease": "Tuberculosis" },
+    "Bhopal": { "lat": 23.2599, "lon": 77.4126, "food": "Poha Jalebi", "aqi": "Moderate", "disease": "Hypertension" },
+    "Indore": { "lat": 22.7196, "lon": 75.8577, "food": "Poha Jalebi", "aqi": "Moderate", "disease": "Obesity" },
+    "Nagpur": { "lat": 21.1458, "lon": 79.0882, "food": "Saoji Curry", "aqi": "Moderate", "disease": "Asthma" },
+    "Visakhapatnam": { "lat": 17.6868, "lon": 83.2185, "food": "Pesarattu", "aqi": "Good", "disease": "Hypertension" },
+    "Kanpur": { "lat": 26.4499, "lon": 80.3319, "food": "Biryani", "aqi": "Poor", "disease": "Lung Infections" },
+    "Surat": { "lat": 21.1702, "lon": 72.8311, "food": "Locho", "aqi": "Moderate", "disease": "Skin Allergies" },
+    "Coimbatore": { "lat": 11.0168, "lon": 76.9558, "food": "Kothu Parotta", "aqi": "Good", "disease": "Diabetes" },
+    "Vadodara": { "lat": 22.3072, "lon": 73.1812, "food": "Fafda", "aqi": "Moderate", "disease": "Heart Disease" },
+    "Thiruvananthapuram": { "lat": 8.5241, "lon": 76.9366, "food": "Appam & Stew", "aqi": "Good", "disease": "None" },
+    "Madurai": { "lat": 9.9252, "lon": 78.1198, "food": "Jigarthanda", "aqi": "Good", "disease": "Diabetes" },
+    "Varanasi": { "lat": 25.3176, "lon": 82.9739, "food": "Kachori Sabzi", "aqi": "Poor", "disease": "Respiratory Issues" },
+    "Nashik": { "lat": 19.9975, "lon": 73.7898, "food": "Misal Pav", "aqi": "Moderate", "disease": "Allergies" },
+    "Raipur": { "lat": 21.2514, "lon": 81.6296, "food": "Chana Samosa", "aqi": "Moderate", "disease": "Respiratory Issues" },
+    "Chandigarh": { "lat": 30.7333, "lon": 76.7794, "food": "Butter Chicken", "aqi": "Good", "disease": "Obesity" },
+    "Guwahati": { "lat": 26.1445, "lon": 91.7362, "food": "Masor Tenga", "aqi": "Good", "disease": "None" },
+    "Amritsar": { "lat": 31.6340, "lon": 74.8723, "food": "Amritsari Kulcha", "aqi": "Poor", "disease": "Heart Disease" },
+    "Kochi": { "lat": 9.9312, "lon": 76.2673, "food": "Meen Curry", "aqi": "Good", "disease": "None" },
+    "Mysore": { "lat": 12.2958, "lon": 76.6394, "food": "Mysore Pak", "aqi": "Good", "disease": "None" },
+    "Jodhpur": { "lat": 26.2389, "lon": 73.0243, "food": "Mirchi Bada", "aqi": "Poor", "disease": "Respiratory Issues" },
+    "Udaipur": { "lat": 24.5854, "lon": 73.7125, "food": "Dal Baati Churma", "aqi": "Moderate", "disease": "Hypertension" },
+    "Ajmer": { "lat": 26.4499, "lon": 74.6399, "food": "Kadhi Kachori", "aqi": "Poor", "disease": "Asthma" },
+    "Gwalior": { "lat": 26.2183, "lon": 78.1828, "food": "Bedai", "aqi": "Poor", "disease": "Respiratory Issues" },
+    "Dehradun": { "lat": 30.3165, "lon": 78.0322, "food": "Aloo Ke Gutke", "aqi": "Good", "disease": "None" },
+    "Meerut": { "lat": 28.9845, "lon": 77.7064, "food": "Rewari", "aqi": "Poor", "disease": "Bronchitis" },
+    "Agra": { "lat": 27.1767, "lon": 78.0081, "food": "Petha", "aqi": "Poor", "disease": "Lung Infections" },
+    "Noida": { "lat": 28.5355, "lon": 77.3910, "food": "Street Momos", "aqi": "Poor", "disease": "Asthma" },
+    "Ghaziabad": { "lat": 28.6692, "lon": 77.4538, "food": "Aloo Tikki", "aqi": "Poor", "disease": "Respiratory Issues" },
+    "Gorakhpur": { "lat": 26.7606, "lon": 83.3732, "food": "Thekua", "aqi": "Moderate", "disease": "Diabetes" },
+    "Jalandhar": { "lat": 31.3260, "lon": 75.5762, "food": "Chana Bhatura", "aqi": "Moderate", "disease": "Heart Disease" },
+    "Ludhiana": { "lat": 30.9009, "lon": 75.8573, "food": "Butter Chicken", "aqi": "Poor", "disease": "Obesity" },
+    "Bhubaneswar": { "lat": 20.2961, "lon": 85.8245, "food": "Chhena Poda", "aqi": "Good", "disease": "None" },
+    "Cuttack": { "lat": 20.4625, "lon": 85.8828, "food": "Dahibara Aloodum", "aqi": "Good", "disease": "None" },
+    "Ranchi": { "lat": 23.3441, "lon": 85.3096, "food": "Dhuska", "aqi": "Moderate", "disease": "Tuberculosis" },
+    "Jamshedpur": { "lat": 22.8046, "lon": 86.2029, "food": "Singhara", "aqi": "Good", "disease": "None" },
+    "Dhanbad": { "lat": 23.7957, "lon": 86.4304, "food": "Litti Chokha", "aqi": "Poor", "disease": "Respiratory Issues" },
+    "Shillong": { "lat": 25.5788, "lon": 91.8933, "food": "Jadoh", "aqi": "Good", "disease": "None" },
+    "Gangtok": { "lat": 27.3314, "lon": 88.6138, "food": "Phagshapa", "aqi": "Good", "disease": "None" },
+    "Aizawl": { "lat": 23.7271, "lon": 92.7176, "food": "Bai", "aqi": "Good", "disease": "None" },
+    "Itanagar": { "lat": 27.0844, "lon": 93.6053, "food": "Thukpa", "aqi": "Good", "disease": "None" },
+    "Imphal": { "lat": 24.8170, "lon": 93.9368, "food": "Eromba", "aqi": "Good", "disease": "None" },
+    "Kohima": { "lat": 25.6747, "lon": 94.1100, "food": "Smoked Pork", "aqi": "Good", "disease": "None" },
+    "Dimapur": { "lat": 25.9186, "lon": 93.7276, "food": "Zutho", "aqi": "Good", "disease": "None" },
+    "Silchar": { "lat": 24.8333, "lon": 92.7789, "food": "Rice & Fish Curry", "aqi": "Good", "disease": "None" },
+    "Bokaro": { "lat": 23.6693, "lon": 86.1511, "food": "Thekua", "aqi": "Moderate", "disease": "Lung Issues" },
+    "Durgapur": { "lat": 23.5204, "lon": 87.3119, "food": "Shukto", "aqi": "Moderate", "disease": "Hypertension" },
+    "Asansol": { "lat": 23.6739, "lon": 86.9524, "food": "Macher Jhol", "aqi": "Moderate", "disease": "Diabetes" },
+    "Patiala": { "lat": 30.3398, "lon": 76.3869, "food": "Patiala Lassi", "aqi": "Moderate", "disease": "Obesity" },
+    "Aligarh": { "lat": 27.8974, "lon": 78.0880, "food": "Aligarh Biryani", "aqi": "Poor", "disease": "Asthma" },
+    "Moradabad": { "lat": 28.8389, "lon": 78.7768, "food": "Moradabadi Dal", "aqi": "Poor", "disease": "Bronchitis" },
+    "Bareilly": { "lat": 28.3670, "lon": 79.4304, "food": "Seekh Kebab", "aqi": "Poor", "disease": "Respiratory Issues" },
+    "Shahjahanpur": { "lat": 27.8800, "lon": 79.9050, "food": "Paneer Tikka", "aqi": "Moderate", "disease": "Diabetes" },
+    "Raebareli": { "lat": 26.2303, "lon": 81.2405, "food": "Aloo Poori", "aqi": "Moderate", "disease": "Hypertension" },
+    "Sitapur": { "lat": 27.5619, "lon": 80.6826, "food": "Chaat", "aqi": "Moderate", "disease": "Obesity" },
+    "Muzaffarnagar": { "lat": 29.4727, "lon": 77.7085, "food": "Jalebi", "aqi": "Poor", "disease": "Lung Issues" },
+    "Basti": { "lat": 26.8196, "lon": 82.5029, "food": "Kachori", "aqi": "Moderate", "disease": "None" },
+    "Faizabad": { "lat": 26.7755, "lon": 82.1502, "food": "Malpua", "aqi": "Good", "disease": "None" },
+    "Firozabad": { "lat": 27.1591, "lon": 78.3958, "food": "Petha", "aqi": "Poor", "disease": "Asthma" },
+    "Bhagalpur": { "lat": 25.2400, "lon": 86.9824, "food": "Tilkut", "aqi": "Moderate", "disease": "Hypertension" },
+    "Purnia": { "lat": 25.7771, "lon": 87.4753, "food": "Sattu Paratha", "aqi": "Good", "disease": "None" },
+    "Darbhanga": { "lat": 26.1522, "lon": 85.8971, "food": "Anarsa", "aqi": "Moderate", "disease": "Diabetes" },
+    "Muzaffarpur": { "lat": 26.1209, "lon": 85.3647, "food": "Litti Chokha", "aqi": "Moderate", "disease": "Lung Issues" },
+    "Gaya": { "lat": 24.7955, "lon": 85.0002, "food": "Tilkut", "aqi": "Good", "disease": "None" },
+    "Katihar": { "lat": 25.5385, "lon": 87.5730, "food": "Rice & Fish Curry", "aqi": "Good", "disease": "None" },
+    "Munger": { "lat": 25.3745, "lon": 86.4742, "food": "Khaja", "aqi": "Moderate", "disease": "Diabetes" },
+    "Siliguri": { "lat": 26.7271, "lon": 88.3953, "food": "Momo", "aqi": "Good", "disease": "None" },
+    "Jalpaiguri": { "lat": 26.5166, "lon": 88.7321, "food": "Thukpa", "aqi": "Good", "disease": "None" },
+    "Balurghat": { "lat": 25.2380, "lon": 88.7773, "food": "Shukto", "aqi": "Good", "disease": "None" },
+    "Raiganj": { "lat": 25.6234, "lon": 88.1245, "food": "Panta Bhat", "aqi": "Good", "disease": "None" },
+    "Burdwan": { "lat": 23.2324, "lon": 87.8615, "food": "Macher Jhol", "aqi": "Moderate", "disease": "Diabetes" },
+    "Haldia": { "lat": 22.0667, "lon": 88.0698, "food": "Prawn Curry", "aqi": "Good", "disease": "None" },
+    "Malda": { "lat": 25.0108, "lon": 88.1411, "food": "Mango Pickle", "aqi": "Good", "disease": "None" },
+    "Krishnanagar": { "lat": 23.4051, "lon": 88.4937, "food": "Sweets", "aqi": "Good", "disease": "None" },
+    "Kharagpur": { "lat": 22.3460, "lon": 87.2319, "food": "Chingri Malai Curry", "aqi": "Moderate", "disease": "None" },
+    "Bankura": { "lat": 23.2321, "lon": 87.0787, "food": "Panta Bhat", "aqi": "Good", "disease": "None" },
+    "Purulia": { "lat": 23.3320, "lon": 86.3652, "food": "Pitha", "aqi": "Moderate", "disease": "Diabetes" },
+    "Medinipur": { "lat": 22.4309, "lon": 87.3215, "food": "Chingri Malai Curry", "aqi": "Good", "disease": "None" },
+    "Kollam": { "lat": 8.8932, "lon": 76.6141, "food": "Banana Chips", "aqi": "Good", "disease": "None" },
+    "Alappuzha": { "lat": 9.4981, "lon": 76.3388, "food": "Puttu & Kadala", "aqi": "Good", "disease": "None" },
+    "Thrissur": { "lat": 10.5276, "lon": 76.2144, "food": "Palada Payasam", "aqi": "Good", "disease": "None" },
+    "Palakkad": { "lat": 10.7867, "lon": 76.6548, "food": "Rasam", "aqi": "Good", "disease": "None" },
+    "Malappuram": { "lat": 11.0732, "lon": 76.0730, "food": "Pathiri", "aqi": "Good", "disease": "None" },
+    "Kozhikode": { "lat": 11.2588, "lon": 75.7804, "food": "Mussel Fry", "aqi": "Good", "disease": "None" },
+    "Kannur": { "lat": 11.8745, "lon": 75.3704, "food": "Kallummakaya", "aqi": "Good", "disease": "None" },
+    "Kasaragod": { "lat": 12.5001, "lon": 75.0880, "food": "Neer Dosa", "aqi": "Good", "disease": "None" },
+    "Mangalore": { "lat": 12.9141, "lon": 74.8560, "food": "Mangalorean Biryani", "aqi": "Good", "disease": "None" },
+    "Udupi": { "lat": 13.3409, "lon": 74.7421, "food": "Udupi Dosa", "aqi": "Good", "disease": "None" },
+    "Karwar": { "lat": 14.8136, "lon": 74.1290, "food": "Seafood Thali", "aqi": "Good", "disease": "None" },
+    "Hubli": { "lat": 15.3647, "lon": 75.1240, "food": "Girmit", "aqi": "Moderate", "disease": "Hypertension" },
+    "Dharwad": { "lat": 15.4574, "lon": 75.0078, "food": "Dharwad Peda", "aqi": "Moderate", "disease": "Diabetes" },
+    "Belgaum": { "lat": 15.8497, "lon": 74.4977, "food": "Kunda", "aqi": "Good", "disease": "None" },
+    "Gulbarga": { "lat": 17.3297, "lon": 76.8343, "food": "Jolad Roti", "aqi": "Moderate", "disease": "Hypertension" },
+    "Bijapur": { "lat": 16.8302, "lon": 75.7100, "food": "Mandige", "aqi": "Moderate", "disease": "None" },
+    "Raichur": { "lat": 16.2047, "lon": 77.3545, "food": "Karadantu", "aqi": "Moderate", "disease": "None" },
+    "Bellary": { "lat": 15.1394, "lon": 76.9214, "food": "Ragi Mudde", "aqi": "Moderate", "disease": "Hypertension" },
+    "Tumkur": { "lat": 13.3400, "lon": 77.1010, "food": "Thatte Idli", "aqi": "Good", "disease": "None" },
+    "Davangere": { "lat": 14.4695, "lon": 75.9209, "food": "Benne Dosa", "aqi": "Good", "disease": "None" },
+    "Shimoga": { "lat": 13.9299, "lon": 75.5681, "food": "Akki Roti", "aqi": "Good", "disease": "None" },
+    "Mysore": { "lat": 12.2958, "lon": 76.6394, "food": "Mysore Pak", "aqi": "Good", "disease": "None" },
+    "Mandya": { "lat": 12.5241, "lon": 76.8951, "food": "Sugarcane Juice", "aqi": "Good", "disease": "None" },
+    "Chikmagalur": { "lat": 13.3223, "lon": 75.7740, "food": "Coffee", "aqi": "Good", "disease": "None" },
+    "Hassan": { "lat": 13.0072, "lon": 76.0999, "food": "Ragi Mudde", "aqi": "Good", "disease": "None" },
+    "Madikeri": { "lat": 12.4244, "lon": 75.7382, "food": "Pandi Curry", "aqi": "Good", "disease": "None" },
+    "Uttara Kannada": { "lat": 14.6643, "lon": 74.3174, "food": "Kotte Kadubu", "aqi": "Good", "disease": "None" },
+    "Ramanagara": { "lat": 12.7225, "lon": 77.2819, "food": "Ragi Mudde", "aqi": "Good", "disease": "None" },
+    "Chamarajanagar": { "lat": 11.9236, "lon": 76.9394, "food": "Mysore Pak", "aqi": "Good", "disease": "None" },
+    "Kolar": { "lat": 13.1355, "lon": 78.1320, "food": "Kharabath", "aqi": "Good", "disease": "None" },
+    "Chittoor": { "lat": 13.2172, "lon": 79.1003, "food": "Pulihora", "aqi": "Good", "disease": "None" },
+    "Nellore": { "lat": 14.4426, "lon": 79.9865, "food": "Gongura Pachadi", "aqi": "Good", "disease": "None" },
+    "Kadapa": { "lat": 14.4673, "lon": 78.8242, "food": "Rayalaseema Ragi Sangati", "aqi": "Good", "disease": "None" },
+    "Anantapur": { "lat": 14.6850, "lon": 77.5953, "food": "Ragi Mudde", "aqi": "Good", "disease": "None" },
+    "Kurnool": { "lat": 15.8281, "lon": 78.0373, "food": "Ulava Charu", "aqi": "Good", "disease": "None" },
+    "Ongole": { "lat": 15.5057, "lon": 80.0499, "food": "Pesarattu", "aqi": "Good", "disease": "None" },
+    "Eluru": { "lat": 16.7107, "lon": 81.1045, "food": "Gavvalu", "aqi": "Good", "disease": "None" },
+    "Srikakulam": { "lat": 18.2969, "lon": 83.8975, "food": "Pootharekulu", "aqi": "Good", "disease": "None" },
+    "Vizianagaram": { "lat": 18.1164, "lon": 83.4115, "food": "Chepala Pulusu", "aqi": "Good", "disease": "None" },
+    "Rajahmundry": { "lat": 17.0005, "lon": 81.8040, "food": "Pootarekulu", "aqi": "Good", "disease": "None" },
+    "Machilipatnam": { "lat": 16.1805, "lon": 81.1389, "food": "Royyala Iguru", "aqi": "Good", "disease": "None" },
+    "Nizamabad": { "lat": 18.6736, "lon": 78.0988, "food": "Sakinalu", "aqi": "Moderate", "disease": "Diabetes" },
+    "Karimnagar": { "lat": 18.4386, "lon": 79.1288, "food": "Sarvapindi", "aqi": "Moderate", "disease": "Hypertension" },
+    "Warangal": { "lat": 17.9784, "lon": 79.5910, "food": "Garelu", "aqi": "Moderate", "disease": "Asthma" },
+    "Khammam": { "lat": 17.2473, "lon": 80.1514, "food": "Kobbari Mithai", "aqi": "Good", "disease": "None" },
+    "Mahbubnagar": { "lat": 16.7380, "lon": 77.9987, "food": "Jonna Rotte", "aqi": "Good", "disease": "None" },
+    "Kakinada": { "lat": 16.9891, "lon": 82.2475, "food": "Godavari Pulasa", "aqi": "Good", "disease": "None" },
+    "Guntur": { "lat": 16.3067, "lon": 80.4365, "food": "Gongura Pickle", "aqi": "Good", "disease": "None" },
+    "Vijayawada": { "lat": 16.5062, "lon": 80.6480, "food": "Punugulu", "aqi": "Moderate", "disease": "Respiratory Issues" },
+    "Tirupati": { "lat": 13.6288, "lon": 79.4192, "food": "Tirupati Laddu", "aqi": "Good", "disease": "None" },
+    "Pondicherry": { "lat": 11.9416, "lon": 79.8083, "food": "French Pastries", "aqi": "Good", "disease": "None" },
+    "Chidambaram": { "lat": 11.3980, "lon": 79.6950, "food": "Kadappa", "aqi": "Good", "disease": "None" },
+    "Mayiladuthurai": { "lat": 11.0984, "lon": 79.6541, "food": "Thayir Sadam", "aqi": "Good", "disease": "None" },
+    "Cuddalore": { "lat": 11.7447, "lon": 79.7680, "food": "Chettinad Chicken", "aqi": "Good", "disease": "None" },
+    "Kumbakonam": { "lat": 10.9602, "lon": 79.3845, "food": "Kumbakonam Degree Coffee", "aqi": "Good", "disease": "None" },
+    "Tanjore": { "lat": 10.7867, "lon": 79.1381, "food": "Thalappakatti Biryani", "aqi": "Good", "disease": "None" },
+    "Nagapattinam": { "lat": 10.7657, "lon": 79.8421, "food": "Nandu Masala", "aqi": "Good", "disease": "None" },
+    "Salem": { "lat": 11.6643, "lon": 78.1460, "food": "Thattuvadai Set", "aqi": "Good", "disease": "None" },
+    "Erode": { "lat": 11.3410, "lon": 77.7172, "food": "Paal Bun", "aqi": "Good", "disease": "None" },
+    "Coimbatore": { "lat": 11.0168, "lon": 76.9558, "food": "Kothu Parotta", "aqi": "Moderate", "disease": "Respiratory Issues" },
+    "Madurai": { "lat": 9.9252, "lon": 78.1198, "food": "Jigarthanda", "aqi": "Good", "disease": "None" },
+    "Dindigul": { "lat": 10.3689, "lon": 77.9803, "food": "Dindigul Biryani", "aqi": "Good", "disease": "None" },
+    "Tirunelveli": { "lat": 8.7139, "lon": 77.7567, "food": "Halwa", "aqi": "Good", "disease": "None" },
+    "Tuticorin": { "lat": 8.8050, "lon": 78.1497, "food": "Prawn Fry", "aqi": "Good", "disease": "None" },
+    "Kanyakumari": { "lat": 8.0883, "lon": 77.5385, "food": "Banana Chips", "aqi": "Good", "disease": "None" },
+    "Kollam": { "lat": 8.8932, "lon": 76.6141, "food": "Banana Chips", "aqi": "Good", "disease": "None" },
+    "Thiruvananthapuram": { "lat": 8.5241, "lon": 76.9366, "food": "Appam & Stew", "aqi": "Good", "disease": "None" },
+    "Pathanamthitta": { "lat": 9.2643, "lon": 76.7870, "food": "Karimeen Fry", "aqi": "Good", "disease": "None" },
+    "Idukki": { "lat": 9.8500, "lon": 76.9700, "food": "Pazhampori", "aqi": "Good", "disease": "None" },
+    "Kottayam": { "lat": 9.5916, "lon": 76.5222, "food": "Meen Curry", "aqi": "Good", "disease": "None" },
+    "Ernakulam": { "lat": 9.9816, "lon": 76.2999, "food": "Kappa & Meen Curry", "aqi": "Good", "disease": "None" },
+    "Wayanad": { "lat": 11.6854, "lon": 76.1320, "food": "Malabar Biriyani", "aqi": "Good", "disease": "None" },
+    "Kannur": { "lat": 11.8745, "lon": 75.3704, "food": "Thalassery Biryani", "aqi": "Good", "disease": "None" },
+    "Kasargod": { "lat": 12.5001, "lon": 75.0880, "food": "Pathiri", "aqi": "Good", "disease": "None" },
+    "Goa": { "lat": 15.2993, "lon": 74.1240, "food": "Goan Fish Curry", "aqi": "Good", "disease": "None" }
+}
+
+var aqiBorders = {
+    "Unhealthy": "red",
+    "Poor": "orange",
+    "Moderate": "yellow"
+}; 
+        var diseasePrevention = {
+            "Respiratory Issues": [
+                "Wear an N95 mask to reduce pollution exposure.",
+                "Use air purifiers indoors for clean air.",
+                "Stay hydrated and practice deep breathing exercises."
+            ],
+            "Asthma": [
+                "Avoid allergens like dust, smoke, and strong odors.",
+                "Keep your home clean and well-ventilated.",
+                "Carry an inhaler if you have asthma symptoms."
+            ],
+            "Diabetes": [
+                "Maintain a balanced diet with low sugar intake.",
+                "Exercise regularly to manage blood sugar levels.",
+                "Monitor blood glucose and reduce stress."
+            ],
+            "Hypertension": [
+                "Reduce salt intake and consume potassium-rich foods.",
+                "Exercise daily and maintain a healthy weight.",
+                "Manage stress through meditation and yoga."
+            ],
+            "Obesity": [
+                "Follow a balanced diet with controlled portions.",
+                "Exercise at least 30 minutes a day.",
+                "Get enough sleep and reduce stress levels."
+            ]
+        };
+
+        Object.keys(cityData).forEach(city => {
+            let data = cityData[city];
+            L.circleMarker([data.lat, data.lon], {
+                radius: 5,         // Adjust size of the point
+                color: "blue",     // Border color of the point
+                fillColor: "blue", // Fill color of the point
+                fillOpacity: 1     // Opacity of the point
+            }).addTo(map)
+            .bindPopup(`<b>${city}</b><br>Famous Food: ${data.food}<br>AQI: ${data.aqi}<br>Common Disease: ${data.disease}`);
+        });
+
+        document.getElementById('search-btn').addEventListener('click', function() {
+            var place = document.getElementById('search-input').value;
+            if (cityData[place]) {
+                var data = cityData[place];
+        
+                map.setView([data.lat, data.lon], 10);
+                L.polygon([
+                    [data.lat + 0.1, data.lon + 0.1],
+                    [data.lat + 0.1, data.lon - 0.1],
+                    [data.lat - 0.1, data.lon - 0.1],
+                    [data.lat - 0.1, data.lon + 0.1]
+                ], { color: 'blue', fillOpacity: 0.2 }).addTo(map);
+        
+                // Get preventive measures based on disease
+                var prevention = diseasePrevention[data.disease] || ["No data available"];
+        
+                // Change border color based on AQI
+                var borderColor = aqiBorders[data.aqi] || "transparent";
+                document.getElementById('info').style.border = `4px solid ${borderColor}`;
+        
+                // Update the info section
+                document.getElementById('info').innerHTML = `<h3>${place}</h3>
+                    <p><strong>Popular Dish:</strong> ${data.food}</p>
+                    <p><strong>AQI:</strong> ${data.aqi}</p>
+                    <p><strong>Most Common Disease:</strong> ${data.disease}</p>
+                    <p><strong>Preventive Measures:</strong></p>
+                    <ul>
+                        <li>${prevention[0]}</li>
+                        <li>${prevention[1]}</li>
+                        <li>${prevention[2]}</li>
+                    </ul>`;
+            }
+        });
+        
+    </script>
+</body>
+</html>

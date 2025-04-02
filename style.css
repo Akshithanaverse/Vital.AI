@@ -1,0 +1,254 @@
+:root {
+    --bg-light: #F4F1DE;
+    --bg-dark: #3D405B;
+    --text-light: #3D405B;
+    --text-dark: #F4F1DE;
+    --primary-color: linear-gradient(135deg, #E07A5F, #F2CC8F);
+    --secondary-color: #81B29A;
+    --accent-color: #E07A5F;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-light);
+    color: var(--text-light);
+    margin: 0;
+    padding: 0;
+    transition: background 0.3s, color 0.3s;
+}
+
+.dark-mode {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    height:2.8rem;
+    background: var(--secondary-color);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: var(--text-light);
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.dark-mode nav ul li a {
+    color: var(--text-dark);
+}
+
+nav ul li a:hover {
+    color: var(--accent-color);
+}
+
+#theme-toggle {
+    cursor: pointer;
+    font-size: 1.2rem;
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+}
+
+.dark-mode #theme-toggle {
+    color: var(--text-dark);
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 2rem;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 0 0 50px 50px;
+    height: 60vh;
+}
+
+
+.hero-content {
+    flex: 1;
+    text-align: left;
+    max-width: 50%;
+    margin-left: 50px;
+}
+
+.hero-content span {
+    font-size: 70px;
+}
+
+.hero-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.hero-content p {
+    font-size: large;
+}
+
+.cta {
+    padding: 12px 24px;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+    display: inline-block;
+    margin-top: 10px;
+    margin-left: 300px;
+}
+
+.cta:hover {
+    background: #F2CC8F;
+}
+
+#services {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+#services h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: var(--accent-color);
+}
+
+#features {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.feature-card {
+    background: var(--secondary-color);
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px) scale(1.01);
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.5);
+}
+
+.dark-mode .feature-card {
+    background: #5D5A6F;
+}
+
+.feature-card h2 {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background: var(--secondary-color);
+}
+
+.chatbot {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--primary-color);
+    color: white;
+    padding: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.chatbot:hover {
+    background: #E07A5F;
+}
+
+/* Back to top button */
+#back-to-top {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    display: none;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+#back-to-top:hover {
+    background: #F2CC8F;
+}
+
+.image-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    max-width: 50%;
+    perspective: 1000px;
+}
+
+.image-container img {
+    width: 500px;
+    height: auto;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    will-change: transform;
+    animation: float 2s ease-in-out infinite alternate;
+
+}
+
+/* Floating up & down animation */
+@keyframes float {
+    0% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(10px);
+    }
+}
+
+/* Tilt effect on hover */
+.image-container img:hover {
+    transform: perspective(500px) rotateY(20deg) rotateX(10deg) scale(1.1);
+}
