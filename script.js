@@ -1,12 +1,21 @@
-document.getElementById('theme-toggle').addEventListener('click', function () {
-    document.body.classList.toggle('dark-mode');
-    this.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-});
+const themeToggleButton = document.getElementById('theme-toggle');
+if (themeToggleButton) {
+    themeToggleButton.addEventListener('click', function () {
+        document.body.classList.toggle('dark-mode');
+        this.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    });
+}
 
 // Scroll to "Our Services" when "Get Started" is clicked
-document.getElementById('get-started').addEventListener('click', function () {
-    document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
-});
+const getStartedButton = document.getElementById('get-started');
+if (getStartedButton) {
+    getStartedButton.addEventListener('click', function () {
+        const services = document.getElementById('services');
+        if (services) {
+            services.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+}
 
 // Back to top button visibility and functionality
 const backToTopButton = document.getElementById('back-to-top');
@@ -22,11 +31,13 @@ window.addEventListener('scroll', function () {
 backToTopButton.addEventListener('click', function () {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
-VanillaTilt.init(document.querySelector(".image-container"), {
-    max: 45, // Maximum tilt
-    speed: 500, // Animation speed
-
-});
+const tiltElement = document.querySelector(".image-container");
+if (tiltElement && window.VanillaTilt) {
+    VanillaTilt.init(tiltElement, {
+        max: 45,
+        speed: 500,
+    });
+}
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll('a[href^="#services"]').forEach(anchor => {
         anchor.addEventListener("click", function (event) {

@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strength Training</title>
+    <title>Cardio Workouts</title>
+    <link rel="stylesheet" href="../style.css">
     <style>
         :root {
     --bg-light: #F4F1DE;
@@ -72,6 +73,21 @@
     </style>
 </head>
 <body>
+    <header class="navbar">
+        <div class="logo">Vital.AI</div>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="recipe.html">Recipe</a></li>
+                <li><a href="remedy.html">Remedies</a></li>
+                <li><a href="bmi.html">BMI</a></li>
+                <li><a href="fitness.html">Fitness</a></li>
+                <li><a href="fasting.html">Fasting</a></li>
+                <li><a href="https://nutrition-analyzer-lh9s.onrender.com/" target="_blank" rel="noopener">Nutrition Analyzer</a></li>
+            </ul>
+        </nav>
+        <button id="theme-toggle">🌙</button>
+    </header>
     <header>Cardio</header>
     <div class="container">
         <h2>Common Cardio Workouts</h2>
@@ -114,6 +130,9 @@
     </div>
     
     <script>
+        document.getElementById("theme-toggle").addEventListener("click", function () {
+            document.body.classList.toggle("dark-mode");
+        });
         function startTimer(timerId, countdownId) {
             let timeInput = document.getElementById(timerId).value;
             let [hours, minutes, seconds] = timeInput.split(':').map(Number);
@@ -142,5 +161,6 @@
             document.getElementById(countdownId).textContent = "00:00:00";
         }
     </script>
+    <script src="../script.js"></script>
 </body>
 </html>

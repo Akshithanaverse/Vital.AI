@@ -1,5 +1,5 @@
-const API_KEY = "AIzaSyDDXsd4LTHzEPPTz0cEnEcJfbg4_fLRnMg"; // Replace with your actual API key
-const MODEL_NAME = "gemini-1.5-flash";
+const API_KEY = "AIzaSyBQIS3aEYf3vmgoC_skLtws0rbq56AIWYc"; // TODO: replace with your Gemini API key
+const MODEL_NAME = "gemini-2.5-flash";
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
 
 async function generateRecipe() {
@@ -10,8 +10,13 @@ async function generateRecipe() {
         return;
     }
 
-    document.getElementById("loading").style.display = "block"; // Show "Generating..." text
-    document.getElementById("output").innerHTML = ""; // Clear previous recipe
+    if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") {
+        alert("Please set your Gemini API key in JavaScript/recipe.js (API_KEY).");
+        return;
+    }
+
+    document.getElementById("loading").style.display = "block";
+    document.getElementById("output").innerHTML = "";
 
     const prompt = `Generate a structured recipe using these ingredients: ${ingredients}.
     - Recipe title (should be catchy)
@@ -33,22 +38,40 @@ async function generateRecipe() {
         });
 
         const data = await response.json();
-        let recipe = data.candidates?.[0]?.content?.parts?.[0]?.text || "No recipe found.";
 
-        document.getElementById("loading").style.display = "none"; // Hide "Generating..." text
+        if (!response.ok) {
+            const message = data?.error?.message || "Request to Gemini API failed.";
+            throw new Error(message);
+        }
 
-        // Remove markdown symbols like "##" and "**"
+        const parts = data?.candidates?.[0]?.content?.parts;
+        let recipe = Array.isArray(parts)
+            ? parts.map(p => p.text).filter(Boolean).join("\n")
+            : data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!recipe || typeof recipe !== "string") {
+            recipe = "No recipe found.";
+        }
+
+        document.getElementById("loading").style.display = "none";
+
         recipe = recipe.replace(/##\s*/g, "").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
 
         document.getElementById("output").innerHTML = `<h2 class="recipe-title">${recipe.split("\n")[0]}</h2><p>${recipe.slice(recipe.indexOf("\n")).replace(/\n/g, "<br>")}</p>`;
     
     } catch (error) {
         console.error("Error generating recipe:", error);
-        document.getElementById("output").innerHTML = "<p>Failed to generate recipe. Please try again.</p>";
+        document.getElementById("loading").style.display = "none";
+        const safeMessage = (error && error.message) ? error.message : "Failed to generate recipe.";
+        document.getElementById("output").innerHTML = `<p>${safeMessage}</p>`;
     }
 }
 
-// Dark/Light Mode Toggle
+// Dark/Light Mode Toggle - FIXED
 document.getElementById("theme-toggle").addEventListener("click", function () {
     document.body.classList.toggle("dark-mode");
+    if (document.body.classList.contains("dark-mode")) {
+        this.textContent = "☀️ Light Mode";
+    } else {
+        this.textContent = "🌙 Dark Mode";
+    }
 });

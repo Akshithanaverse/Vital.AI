@@ -1,12 +1,18 @@
-const API_KEY = "AIzaSyDDXsd4LTHzEPPTz0cEnEcJfbg4_fLRnMg"; // Replace with your actual API key
-const MODEL_NAME = "gemini-1.5-flash";
-const API_URL = `https://generativelanguage.googleapis.com/v1/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
+const API_KEY = "AIzaSyDc-9RM2Oeev_kZIVcYPtbkx-H6KbOqgAE"; // TODO: replace with your Gemini API key
+const MODEL_NAME = "gemini-2.5-flash";
+const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
+
 
 async function getRemedies() {
     const disease = document.getElementById("ingredients").value.trim(); // Fixed ID mismatch
     
     if (!disease) {
         alert("Please enter a disease or symptom.");
+        return;
+    }
+
+    if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") {
+        alert("Please set your Gemini API key in JavaScript/remedy.js (API_KEY).");
         return;
     }
 
@@ -33,7 +39,19 @@ async function getRemedies() {
         });
 
         const data = await response.json();
-        let remedy = data.candidates?.[0]?.content?.parts?.[0]?.text || "No remedies found.";
+
+        if (!response.ok) {
+            const message = data?.error?.message || "Request to Gemini API failed.";
+            throw new Error(message);
+        }
+
+        const parts = data?.candidates?.[0]?.content?.parts;
+        let remedy = Array.isArray(parts)
+            ? parts.map(p => p.text).filter(Boolean).join("\n")
+            : data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!remedy || typeof remedy !== "string") {
+            remedy = "No remedies found.";
+        }
 
         document.getElementById("loading").style.display = "none"; // Hide "Generating..." text
 
@@ -45,7 +63,9 @@ async function getRemedies() {
     
     } catch (error) {
         console.error("Error generating remedies:", error);
-        document.getElementById("output").innerHTML = "<p>Failed to generate remedies. Please try again.</p>";
+        document.getElementById("loading").style.display = "none";
+        const safeMessage = (error && error.message) ? error.message : "Failed to generate remedies.";
+        document.getElementById("output").innerHTML = `<p>${safeMessage}</p>`;
     }
 }
 
