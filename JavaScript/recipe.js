@@ -1,6 +1,6 @@
-const API_KEY = "AIzaSyBQIS3aEYf3vmgoC_skLtws0rbq56AIWYc"; // TODO: replace with your Gemini API key
-const MODEL_NAME = "gemini-2.5-flash";
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
+const POTATO = "AIzaSyAXuA3Da9yh5vF34iLrbUiSnohZPh-8bJ0"; // TODO: replace with your Gemini API key
+const ALOO = "gemini-2.5-flash";
+const BATATA = `https://generativelanguage.googleapis.com/v1beta/models/${ALOO}:generateContent?key=${POTATO}`;
 
 async function generateRecipe() {
     const ingredients = document.getElementById("ingredients").value.trim();
@@ -10,7 +10,7 @@ async function generateRecipe() {
         return;
     }
 
-    if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") {
+    if (!POTATO || POTATO === "YOUR_GEMINI_API_KEY") {
         alert("Please set your Gemini API key in JavaScript/recipe.js (API_KEY).");
         return;
     }
@@ -31,7 +31,7 @@ async function generateRecipe() {
     };
 
     try {
-        const response = await fetch(API_URL, {
+        const response = await fetch(BATATA, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(requestBody)
