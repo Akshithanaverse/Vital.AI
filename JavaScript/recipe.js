@@ -1,6 +1,6 @@
-const POTATO = "AIzaSyAXuA3Da9yh5vF34iLrbUiSnohZPh-8bJ0"; // TODO: replace with your Gemini API key
-const ALOO = "gemini-2.5-flash";
-const BATATA = `https://generativelanguage.googleapis.com/v1beta/models/${ALOO}:generateContent?key=${POTATO}`;
+const POTATO = "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"; // Get from https://console.groq.com/keys
+const ALOO = "llama-3.3-70b-versatile";
+const BATATA = "https://api.groq.com/openai/v1/chat/completions";
 
 async function generateRecipe() {
     const ingredients = document.getElementById("ingredients").value.trim();
@@ -10,8 +10,8 @@ async function generateRecipe() {
         return;
     }
 
-    if (!POTATO || POTATO === "YOUR_GEMINI_API_KEY") {
-        alert("Please set your Gemini API key in JavaScript/recipe.js (API_KEY).");
+    if (!POTATO || POTATO === "YOUR_GROQ_API_KEY") {
+        alert("Please set your Groq API key in JavaScript/recipe.js");
         return;
     }
 
@@ -27,27 +27,36 @@ async function generateRecipe() {
     Avoid markdown symbols like ## or ** in the response.`;
 
     const requestBody = {
-        contents: [{ parts: [{ text: prompt }] }]
+        model: ALOO,
+        messages: [
+            {
+                role: "user",
+                content: prompt
+            }
+        ],
+        temperature: 0.7,
+        max_tokens: 1500
     };
 
     try {
         const response = await fetch(BATATA, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${POTATO}`
+            },
             body: JSON.stringify(requestBody)
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-            const message = data?.error?.message || "Request to Gemini API failed.";
+            const message = data?.error?.message || "Request to Groq API failed.";
             throw new Error(message);
         }
 
-        const parts = data?.candidates?.[0]?.content?.parts;
-        let recipe = Array.isArray(parts)
-            ? parts.map(p => p.text).filter(Boolean).join("\n")
-            : data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        let recipe = data?.choices?.[0]?.message?.content;
+        
         if (!recipe || typeof recipe !== "string") {
             recipe = "No recipe found.";
         }
@@ -66,7 +75,7 @@ async function generateRecipe() {
     }
 }
 
-// Dark/Light Mode Toggle - FIXED
+// Dark/Light Mode Toggle
 document.getElementById("theme-toggle").addEventListener("click", function () {
     document.body.classList.toggle("dark-mode");
     if (document.body.classList.contains("dark-mode")) {
