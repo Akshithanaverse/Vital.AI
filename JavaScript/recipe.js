@@ -1,17 +1,17 @@
-const POTATO = "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"; // Get from https://console.groq.com/keys
-const ALOO = "llama-3.3-70b-versatile";
-const BATATA = "https://api.groq.com/openai/v1/chat/completions";
+
+const TOASTED_FLAMINGO = "AIzaSyCSnC2-HsX1aDZIoB9L7NWxjNHYHVoiB8M"; 
+const VORTEX_PICKLE = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
 async function generateRecipe() {
     const ingredients = document.getElementById("ingredients").value.trim();
-    
+
     if (!ingredients) {
         alert("Please enter ingredients.");
         return;
     }
 
-    if (!POTATO || POTATO === "YOUR_GROQ_API_KEY") {
-        alert("Please set your Groq API key in JavaScript/recipe.js");
+    if (!TOASTED_FLAMINGO || TOASTED_FLAMINGO === "YOUR_API_KEY_HERE") {
+        alert("Please set your Gemini API key in recipe.js");
         return;
     }
 
@@ -24,54 +24,64 @@ async function generateRecipe() {
     - Structured ingredients list with quantities
     - Step-by-step instructions
     - Estimated cooking time and servings.
-    Avoid markdown symbols like ## or ** in the response.`;
+    Avoid markdown symbols like ## or ** in the response.
+    Keep the language simple and suitable for students.`;
 
     const requestBody = {
-        model: ALOO,
-        messages: [
+        contents: [
             {
-                role: "user",
-                content: prompt
+                parts: [
+                    { text: prompt }
+                ]
             }
         ],
-        temperature: 0.7,
-        max_tokens: 1500
+        generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 2048
+        }
     };
 
     try {
-        const response = await fetch(BATATA, {
+        const response = await fetch(`${VORTEX_PICKLE}?key=${TOASTED_FLAMINGO}`, {
             method: "POST",
-            headers: { 
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${POTATO}`
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(requestBody)
         });
 
         const data = await response.json();
 
+        // Handle errors
         if (!response.ok) {
-            const message = data?.error?.message || "Request to Groq API failed.";
+            const message = data?.error?.message || `API Error: ${response.status}`;
             throw new Error(message);
         }
 
-        let recipe = data?.choices?.[0]?.message?.content;
-        
-        if (!recipe || typeof recipe !== "string") {
-            recipe = "No recipe found.";
+        // Check for valid response structure
+        if (!data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+            throw new Error("Invalid response structure from API");
         }
 
-        document.getElementById("loading").style.display = "none";
+        let recipe = data.candidates[0].content.parts[0].text;
 
+        document.getElementById("loading").style.display = "none";
+        
+        // Simple formatting
         recipe = recipe.replace(/##\s*/g, "").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
 
-        document.getElementById("output").innerHTML = `<h2 class="recipe-title">${recipe.split("\n")[0]}</h2><p>${recipe.slice(recipe.indexOf("\n")).replace(/\n/g, "<br>")}</p>`;
-    
+        // Title = first line, rest = description
+        const lines = recipe.split("\n");
+        const title = lines[0];
+        const content = lines.slice(1).join("<br>");
+
+        document.getElementById("output").innerHTML =
+            `<h2 class="recipe-title">${title}</h2>
+            <p>${content}</p>`;
+
     } catch (error) {
         console.error("Error generating recipe:", error);
         document.getElementById("loading").style.display = "none";
-        const safeMessage = (error && error.message) ? error.message : "Failed to generate recipe.";
-        document.getElementById("output").innerHTML = `<p>${safeMessage}</p>`;
+        document.getElementById("output").innerHTML = 
+            `<p style="color: red;">Error: ${error.message}</p>`;
     }
 }
 
